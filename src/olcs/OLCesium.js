@@ -15,7 +15,7 @@ import olcsOverlaySynchronizer from './OverlaySynchronizer.js';
 /**
  * @typedef {Object} OLCesiumOptions
  * @property {import('ol/Map.js').default} map The OpenLayers map we want to show on a Cesium scene.
- * @property {Element|string} [target] Target element for the Cesium scene.
+ * @property {Cesium.Viewer} [viewer]   Cesium viewer.
  * @property {function(!import('ol/Map.js').default, !Cesium.Scene, !Cesium.DataSourceCollection): Array<import('olcs/AbstractSynchronizer.js').default>}
  *      [createSynchronizers] Callback function which will be called by the {@link olcs.OLCesium}
  *      constructor to create custom synchronizers. Receives an `ol.Map` and a `Cesium.Scene` as arguments,
@@ -23,8 +23,6 @@ import olcsOverlaySynchronizer from './OverlaySynchronizer.js';
  * @property {function(): Cesium.JulianDate} [time] Control the current time used by Cesium.
  * @property {boolean} [stopOpenLayersEventsPropagation] Prevent propagation of mouse/touch events to
  *      OpenLayers when Cesium is active.
- * @property {Cesium.SceneOptions} [sceneOptions] Allows the passing of property value to the
- *      `Cesium.Scene`.
  */
 
 
@@ -97,11 +95,11 @@ class OLCesium {
     containerAttribute.value = `${fillArea}visibility:hidden;`;
     this.container_.setAttributeNode(containerAttribute);
 
-    let targetElement = options.target || this.map_.getViewport();
-    if (typeof targetElement === 'string') {
-      targetElement = document.getElementById(targetElement);
-    }
-    targetElement.appendChild(this.container_);
+
+    //火星科技添加
+    let viewer = options.viewer
+ 
+    viewer.container.appendChild(this.container_);
 
     /**
      * Whether the Cesium container is placed over the ol map.
@@ -110,7 +108,7 @@ class OLCesium {
      * @type {boolean}
      * @private
      */
-    this.isOverMap_ = !options.target;
+    this.isOverMap_ = false; 
 
 
     if (this.isOverMap_ && options.stopOpenLayersEventsPropagation) {
@@ -167,7 +165,7 @@ class OLCesium {
      * @type {!Cesium.Scene}
      * @private
      */
-    this.scene_ = new Cesium.Scene(sceneOptions);
+    this.scene_ = viewer.scene;
 
     const sscc = this.scene_.screenSpaceCameraController;
 
@@ -195,24 +193,21 @@ class OLCesium {
      * @type {!Cesium.Globe}
      * @private
      */
-    this.globe_ = new Cesium.Globe(Cesium.Ellipsoid.WGS84);
-    this.globe_.baseColor = Cesium.Color.WHITE;
-    this.scene_.globe = this.globe_;
-    this.scene_.skyAtmosphere = new Cesium.SkyAtmosphere();
+    this.globe_ = viewer.scene.globe;
+    // this.globe_.baseColor = Cesium.Color.WHITE;
+    // this.scene_.globe = this.globe_;
+    // this.scene_.skyAtmosphere = new Cesium.SkyAtmosphere();
 
     // The first layer of Cesium is special; using a 1x1 transparent image to workaround it.
     // See https://github.com/AnalyticalGraphicsInc/cesium/issues/1323 for details.
-    const firstImageryProvider = new Cesium.SingleTileImageryProvider({
-      url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
-      rectangle: Cesium.Rectangle.fromDegrees(0, 0, 1, 1) // the Rectangle dimensions are arbitrary
-    });
-    this.globe_.imageryLayers.addImageryProvider(firstImageryProvider, 0);
+    // const firstImageryProvider = new Cesium.SingleTileImageryProvider({
+    //   url: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+    //   rectangle: Cesium.Rectangle.fromDegrees(0, 0, 1, 1) // the Rectangle dimensions are arbitrary
+    // });
+    // this.globe_.imageryLayers.addImageryProvider(firstImageryProvider, 0);
 
-    this.dataSourceCollection_ = new Cesium.DataSourceCollection();
-    this.dataSourceDisplay_ = new Cesium.DataSourceDisplay({
-      scene: this.scene_,
-      dataSourceCollection: this.dataSourceCollection_
-    });
+    this.dataSourceCollection_ = viewer.dataSources
+    this.dataSourceDisplay_ = viewer.dataSourceDisplay
 
     const synchronizers = options.createSynchronizers ?
       options.createSynchronizers(this.map_, this.scene_, this.dataSourceCollection_) : [

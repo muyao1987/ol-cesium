@@ -1,5 +1,13 @@
+## 当前仓库中改动内容
+ OLCesium 类 改为传入viewer参数（Cesium.Viewer），由外部构造好的三维地球。
+
+
+## ol-cesium 原始说明
+
 OpenLayers - Cesium integration library. Create your map using [OpenLayers](https://openlayers.org/), and visualize it on a globe with [Cesium](https://cesiumjs.org).
 See [live examples](https://openlayers.org/ol-cesium/examples/).
+ 
+
 
 
 ES6 modules
