@@ -7,6 +7,7 @@
     "build-library": "cross-env NODE_ENV=production TARGET=library webpack --progress --bail",
     "build-library-debug": "cross-env NODE_ENV=development TARGET=library webpack --progress --bail",
     "build-umd": "cross-env NODE_ENV=production TARGET=umd webpack --progress --bail",
+    "build": "cross-env NODE_ENV=development TARGET=library webpack --progress --bail && cross-env NODE_ENV=production TARGET=library webpack --progress --bail",
     "start": "cross-env DEV_SERVER=1 NODE_ENV=development TARGET=examples webpack serve --port 3000 --progress --bail",
     "typecheck": "tsc --pretty",
     "doc": "typedoc --name ol-cesium --excludeExternals --out dist/apidoc --entryPoints src/index.library.js --tsconfig ./tsconfig.json"

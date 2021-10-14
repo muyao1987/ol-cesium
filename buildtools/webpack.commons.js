@@ -40,7 +40,7 @@ const iconRule = {
 
 const config = {
   context: path.resolve(__dirname, '../'),
-  devtool: 'source-map',
+  // devtool: 'source-map',
   output: {
     path: path.resolve(__dirname, '../dist/')
   },
