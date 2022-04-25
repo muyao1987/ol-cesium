@@ -6,8 +6,11 @@ const extensionReplacerRegExp = new RegExp('\\.js$');
 
 const nodeEnv = process.env['NODE_ENV'] || 'development';
 const filename = nodeEnv === 'development' ? 'olcesium-debug.js' : 'olcesium.js';
+const minimize = nodeEnv !== 'development'
+ 
 module.exports = {
   entry: './src/index.library.js',
+  devtool: minimize ? undefined : "source-map",
   output: {
     library: 'olcs_unused_var',
     filename,
