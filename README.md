@@ -1,6 +1,45 @@
-## 当前仓库中改动内容
- OLCesium 类 改为传入viewer参数（Cesium.Viewer），由外部构造好的三维地球。
+# 关于本仓库（中文说明）
 
+本仓库是 [openlayers/ol-cesium](https://github.com/openlayers/ol-cesium) 的 fork，仅用于个人定制与调试，不用于替代上游发布。ol-cesium 是 OpenLayers 与 Cesium 的集成库：用 [OpenLayers](https://openlayers.org/) 创建二维地图，并可在 [Cesium](https://cesiumjs.org) 三维地球上可视化与双向同步。许可证遵循上游 BSD-2-Clause（见 [LICENSE](LICENSE)），上游 README 原文保留在本文件下方。
+
+## 本仓库相对上游的改动
+
+- `OLCesium` 类增加 `viewer` 参数，支持传入外部构造好的 `Cesium.Viewer` 三维地球实例（便于外部自行创建和管控 viewer）。
+
+## 目录结构
+
+| 目录 / 文件 | 说明 |
+| --- | --- |
+| `src/` | 库源码（ES6 modules） |
+| `examples/` | 示例程序 |
+| `buildtools/` | webpack 构建配置脚本 |
+| `css/` | 库样式文件（olcs.css） |
+| `Makefile`、`webpack.config.js` | 构建入口配置 |
+
+## 常用命令（来自 package.json scripts 与 Makefile）
+
+npm scripts：
+
+| 命令 | 说明 |
+| --- | --- |
+| `npm run build` | 构建库（development + production 两种模式） |
+| `npm run build-library` | production 模式构建库 |
+| `npm run build-library-debug` | development 模式构建库（未压缩，便于调试） |
+| `npm run build-examples` | 构建示例 |
+| `npm run build-umd` | 构建 UMD 版本（Angular 等场景） |
+| `npm start` | 启动示例开发服务器（http://localhost:3000/examples） |
+| `npm run typecheck` | TypeScript 类型检查 |
+| `npm run doc` | 生成 API 文档（typedoc） |
+
+Makefile 目标：
+
+- `make serve`：启动示例开发服务器（内部执行 `npm start`）
+- `make dist`：生成库与示例的发布产物
+- `make lint`：运行 eslint 检查
+- `make clean` / `make cleanall`：清理构建产物 / 连同 node_modules 一并清理
+- `make help`：查看帮助
+
+---
 
 ## ol-cesium 原始说明
 
